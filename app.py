@@ -4,6 +4,8 @@ from dash import Dash, html, dcc
 
 app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
 
+server = app.server
+
 color_mode_switch = html.Span(
     [
         dbc.Label(className="fa fa-moon", html_for="switch"),
