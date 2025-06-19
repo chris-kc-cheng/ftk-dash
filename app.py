@@ -2,27 +2,46 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
 
-app = Dash(__name__, use_pages=True, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.FONT_AWESOME])
+# Data
+print("Loading data...")
+
+
+# App
+app = Dash(
+    __name__,
+    use_pages=True,
+    external_stylesheets=[
+        dbc.themes.BOOTSTRAP,
+        dbc.icons.FONT_AWESOME]
+)
 
 server = app.server
 
-color_mode_switch = html.Span(
-    [
-        dbc.Label(className="fa fa-moon", html_for="switch"),
-        dbc.Switch( id="switch", value=True, className="d-inline-block ms-1", persistence=True),        
-        dbc.Label(className="fa fa-sun", html_for="switch"),
-    ]
-)
-
 app.layout = html.Div([
-    html.H1('Multi-page app with Dash Pages'),
-    html.Div([
-        html.Div(
-            dcc.Link(f"{page['name']} - {page['path']}", href=page["relative_path"])
-        ) for page in dash.page_registry.values()
-    ]),
-    color_mode_switch,
-    dash.page_container
+    dbc.Navbar(
+        dbc.Container([
+            dbc.Row([
+                dbc.Col(dbc.NavbarBrand(
+                    "Market Monitor Dashboard", className="ms-2")),
+            ]),
+            dbc.Nav([
+                dbc.Col(dbc.NavItem(dbc.NavLink("MSCI RT", href="/", className="text-nowrap"))),
+                dbc.Col(dbc.NavItem(dbc.NavLink("World Indices", href="/wei", className="text-nowrap"))),
+                dbc.DropdownMenu(
+                    [
+                        dbc.Switch(
+                            id="switch", value=True, className="d-inline-block ms-1", persistence=True)
+                    ],
+                    label=dbc.Label(className="fa fa-gear", html_for="switch")
+                )
+            ]),
+        ]),
+        color="primary",
+        dark=True,
+    ),
+    dbc.Container([
+        dash.page_container
+    ])
 ])
 
 dash.clientside_callback(
